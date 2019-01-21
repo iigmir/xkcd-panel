@@ -1,57 +1,109 @@
 <div id="app">
-    <button data-app="decide-number"> Read comic </button>
-    <div data-app="panel" class="hide">
-        <h1 data-app="title"></h1>
-        <img src="#" alt="#" data-app="panel-img" />
+    <button class="decide_number"> Read comic </button>
+    <div class="hide panel">
+        <h1 class="title"></h1>
+        <img class="comic" src="#" alt="#" />
+        <p class="alt"></p>
     </div>
-    
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-window.onload = function ()
+$( document ).ready(()=>
 {
-    async function ajax_request(param)
+    let maxnum = $.ajax({ url: "/api/v1/xkcd" });
+    maxnum.then((r)=>
     {
-        const api = await fetch( new Request(`/api/v1/xkcd/${param}`) );
-        const json = await api.json();
-        if( api.status !== 200 ) {
-            return Promise.reject({
-                code: api.status,
-                text: api.statusText
-            });
-        }
-        return await api.json();
-    }
-    async function detect_max()
-    {
-        const api = await fetch( new Request(`/api/v1/xkcd`) );
-        const json = await api.json();
-        const response = await json;
-        debugger;
-        return await api.json();
-    }
-    // https://xkcd.com/info.0.json
-    let app_action = (input_dom) => document.querySelector(`#app *[data-app="${input_dom}"]`);
-    let max = detect_max();
-    app_action("decide-number").addEventListener("click", () =>
-    {
-        app_action("panel").classList.add("hide");
-        let request = ajax_request( parseInt( Math.random() ) );
-        request.then( j =>
+        let get_maxnum_action = () =>
         {
-            let response = j.response;
-            app_action("title").innerText = response.safe_title;
-            app_action("panel-img").src = response.img;
-            app_action("panel-img").alt = response.alt;
-            app_action("panel").classList.remove("hide");
-            app_action("panel-img").classList.remove("hide");
-        });
-        request.catch( e =>
+            let response = r.response.body;
+            let id = parseInt( Math.random() * response.num, 10 );
+            return id;
+        };
+        let dom_opreation = ({ loading, data }) =>
         {
-            app_action("title").innerText = "Error";
-            app_action("panel").classList.remove("hide");
-            app_action("panel-img").classList.add("hide");
-        });
+            let title = $(".title");
+            let comic = $(".comic");
+            let btn_text = loading === true ? "Loading..." : "Read another comic";
+            if( loading === true )
+            {
+                title.text("");
+                comic.prop("src","");
+                comic.prop("alt","");
+                $(".alt").text("");
+                $(".panel").addClass("hide");
+            }
+            else
+            {
+                title.text(data.safe_title);
+                comic.prop("src" , data.img);
+                comic.prop("alt" , data.alt);
+                $(".alt").text(data.alt);
+                $(".panel").removeClass("hide");
+            }
+            $(".decide_number").text(btn_text);
+            $(".decide_number").prop("disabled", loading);
+        };
+        let request_comic = () =>
+        {
+            let id = get_maxnum_action();
+            let req = $.ajax({ url: `/api/v1/xkcd/${id}` });
+            dom_opreation({ loading: true, data: {} });
+            req.then( (r) => request_comic_action(r));
+        };
+        let request_comic_action = (r) =>
+        {
+            dom_opreation({ loading:false, data:r.response });
+        };
+        $(".decide_number").click(()=>request_comic());
     });
-}
+});
+
+// window.onload = function ()
+// {
+//     async function ajax_request(param)
+//     {
+//         const api = await fetch( new Request(`/api/v1/xkcd/${param}`) );
+//         const json = await api.json();
+//         if( api.status !== 200 ) {
+//             return Promise.reject({
+//                 code: api.status,
+//                 text: api.statusText
+//             });
+//         }
+//         return await api.json();
+//     }
+//     async function detect_max()
+//     {
+//         const api = await fetch( new Request(`/api/v1/xkcd`) );
+//         const json = await api.json();
+//         const response = await json.response.body;
+//         return response;
+//     }
+//     let app_action = (input_dom) => document.querySelector(`#app *[data-app="${input_dom}"]`);
+//     app_action("decide-number").addEventListener("click", async () =>
+//     {
+//         app_action("panel").classList.add("hide");
+//         let max_ajax = await detect_max();
+//         let max = max_ajax.num;
+//         let id = parseInt( Math.random() * max, 10 );
+//         // let request = ajax_request(id);
+//         // comic_request_action(id);
+//         // request.then( j =>
+//         // {
+//         //     let response = j.response;
+//         //     app_action("title").innerText = response.safe_title;
+//         //     app_action("panel-img").src = response.img;
+//         //     app_action("panel-img").alt = response.alt;
+//         //     app_action("panel").classList.remove("hide");
+//         //     app_action("panel-img").classList.remove("hide");
+//         // });
+//         // request.catch( e =>
+//         // {
+//         //     app_action("title").innerText = "Error";
+//         //     app_action("panel").classList.remove("hide");
+//         //     app_action("panel-img").classList.add("hide");
+//         // });
+//     });
+// }
 </script>
