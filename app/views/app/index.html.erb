@@ -30,6 +30,7 @@ $( document ).ready(()=>
                 title.text("");
                 comic.prop("src","");
                 comic.prop("alt","");
+                comic.prop("title","");
                 $(".alt").text("");
                 $(".panel").addClass("hide");
             }
@@ -38,6 +39,7 @@ $( document ).ready(()=>
                 title.text(data.safe_title);
                 comic.prop("src" , data.img);
                 comic.prop("alt" , data.alt);
+                comic.prop("title" , data.alt);
                 $(".alt").text(data.alt);
                 $(".panel").removeClass("hide");
             }
