@@ -5,19 +5,22 @@ class ApiV1::EventsController < ApplicationController
         render :json => { message: "Success" }, :status => 200
     end
     def show
-        input_param = params[:id].to_i
-        status = input_param > 0 && input_param != 404 ? 200 : 404
-        res = request_xkcd()
-        render :json => { input_param: input_param, res: res }, status: status
+        paramenter = params[:id].to_i
+        status = paramenter > 0 ? 200 : 404
+        response = request_xkcd(paramenter)
+        status = response[:code]
+        render :json => { paramenter: paramenter, response: response[:body] }, status: status
     end
 
     private
-    def request_xkcd
-        url = URI.parse('http://www.example.com/index.html')
-        req = Net::HTTP::Get.new(url.to_s)
-        res = Net::HTTP.start(url.host, url.port) {|http|
-            http.request(req)
-        }
-        return res
+    def request_xkcd(input_code)
+        api = "https://xkcd.com/" + input_code.to_s + "/info.0.json"
+        uri = URI(api)
+        res = Net::HTTP.get_response(uri)
+        json = {}
+        if res.code == "200"
+            json = JSON.parse(res.body)
+        end
+        return { body: json, code: res.code }
     end
 end
