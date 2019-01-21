@@ -1,3 +1,57 @@
-<p>
-Hello
-</p>
+<div id="app">
+    <button data-app="decide-number"> Read comic </button>
+    <div data-app="panel" class="hide">
+        <h1 data-app="title"></h1>
+        <img src="#" alt="#" data-app="panel-img" />
+    </div>
+    
+</div>
+
+<script>
+window.onload = function ()
+{
+    async function ajax_request(param)
+    {
+        const api = await fetch( new Request(`/api/v1/xkcd/${param}`) );
+        const json = await api.json();
+        if( api.status !== 200 ) {
+            return Promise.reject({
+                code: api.status,
+                text: api.statusText
+            });
+        }
+        return await api.json();
+    }
+    async function detect_max()
+    {
+        const api = await fetch( new Request(`/api/v1/xkcd`) );
+        const json = await api.json();
+        const response = await json;
+        debugger;
+        return await api.json();
+    }
+    // https://xkcd.com/info.0.json
+    let app_action = (input_dom) => document.querySelector(`#app *[data-app="${input_dom}"]`);
+    let max = detect_max();
+    app_action("decide-number").addEventListener("click", () =>
+    {
+        app_action("panel").classList.add("hide");
+        let request = ajax_request( parseInt( Math.random() ) );
+        request.then( j =>
+        {
+            let response = j.response;
+            app_action("title").innerText = response.safe_title;
+            app_action("panel-img").src = response.img;
+            app_action("panel-img").alt = response.alt;
+            app_action("panel").classList.remove("hide");
+            app_action("panel-img").classList.remove("hide");
+        });
+        request.catch( e =>
+        {
+            app_action("title").innerText = "Error";
+            app_action("panel").classList.remove("hide");
+            app_action("panel-img").classList.add("hide");
+        });
+    });
+}
+</script>
