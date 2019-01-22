@@ -2,9 +2,9 @@
     <div>
         <button class="decide_number actived"> Read comic </button>
     </div>
-    <article class="hide panel">
+    <article class="panel">
         <h1 class="title"></h1>
-        <img class="comic" src="#" alt="#" />
+        <img class="comic" src="" alt="" />
         <p class="alt"></p>
     </article>
 </main>
@@ -84,7 +84,7 @@ $( document ).ready(()=>
                 title_text = data.safe_title;
                 alt_text = data.alt
                 comic.prop("src" , data.img);
-                comic.prop("alt" , data.alt);
+                comic.prop("alt" , data.transcript);
                 comic.prop("title" , data.alt);
                 $(".panel").removeClass("hide");
             }
