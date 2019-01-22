@@ -69,7 +69,8 @@ $( document ).ready(()=>
         {
             let title = $(".title");
             let comic = $(".comic");
-            let btn_text = loading === true ? "Loading..." : "Read another comic";
+            let decide_number = $(".decide_number");
+            let btn_text = "Loading...";
             let title_text = "";
             let alt_text = "";
             if( loading === true )
@@ -77,23 +78,23 @@ $( document ).ready(()=>
                 comic.prop("src","");
                 comic.prop("alt","");
                 comic.prop("title","");
-                $(".panel").addClass("hide");
             }
             else
             {
+                btn_text = "Read another comic";
                 title_text = data.safe_title;
-                alt_text = data.alt
+                alt_text = data.alt;
                 comic.prop("src" , data.img);
                 comic.prop("alt" , data.transcript);
                 comic.prop("title" , data.alt);
-                $(".panel").removeClass("hide");
             }
             title.text( title_text );
             $(".alt").text( alt_text );
-            $(".decide_number").text(btn_text);
-            $(".decide_number").toggleClass("actived");
-            $(".decide_number").toggleClass("inactived");
-            $(".decide_number").prop("disabled", loading);
+            $(".panel").toggleClass("hide");
+            decide_number.text(btn_text);
+            decide_number.toggleClass("actived");
+            decide_number.toggleClass("inactived");
+            decide_number.prop("disabled", loading);
         };
         let request_comic = () =>
         {
