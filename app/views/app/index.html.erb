@@ -1,13 +1,58 @@
-<div id="app">
-    <button class="decide_number"> Read comic </button>
-    <div class="hide panel">
+<main id="app">
+    <div>
+        <button class="decide_number actived"> Read comic </button>
+    </div>
+    <article class="hide panel">
         <h1 class="title"></h1>
         <img class="comic" src="#" alt="#" />
         <p class="alt"></p>
-    </div>
-</div>
+    </article>
+</main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+.hide
+{
+    display: none;
+}
+
+main
+{
+    max-width: 960px;
+    margin: 1rem auto;
+}
+
+button.decide_number
+{
+    display: block;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+}
+.actived
+{
+    background: #87e0fd;
+    background: linear-gradient(to bottom, #87e0fd 0%, #05abe0 100%);
+}
+.inactived
+{
+    background: rgb(224,243,250);
+    background: linear-gradient(to bottom, rgba(224,243,250,1) 0%, rgba(182,223,253,1) 100%);
+}
+
+.panel .title,
+.panel .alt
+{
+    text-align: center;
+}
+
+.panel .comic
+{
+    display: block;
+    margin: 1rem auto 1rem auto;
+}
+</style>
+
 <script>
 $( document ).ready(()=>
 {
@@ -25,25 +70,29 @@ $( document ).ready(()=>
             let title = $(".title");
             let comic = $(".comic");
             let btn_text = loading === true ? "Loading..." : "Read another comic";
+            let title_text = "";
+            let alt_text = "";
             if( loading === true )
             {
-                title.text("");
                 comic.prop("src","");
                 comic.prop("alt","");
                 comic.prop("title","");
-                $(".alt").text("");
                 $(".panel").addClass("hide");
             }
             else
             {
-                title.text(data.safe_title);
+                title_text = data.safe_title;
+                alt_text = data.alt
                 comic.prop("src" , data.img);
                 comic.prop("alt" , data.alt);
                 comic.prop("title" , data.alt);
-                $(".alt").text(data.alt);
                 $(".panel").removeClass("hide");
             }
+            title.text( title_text );
+            $(".alt").text( alt_text );
             $(".decide_number").text(btn_text);
+            $(".decide_number").toggleClass("actived");
+            $(".decide_number").toggleClass("inactived");
             $(".decide_number").prop("disabled", loading);
         };
         let request_comic = () =>
