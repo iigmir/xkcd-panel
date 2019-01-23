@@ -54,7 +54,7 @@ button.decide_number
 </style>
 
 <script>
-$( document ).ready(()=>
+window.onload = ()=>
 {
     let maxnum = $.ajax({ url: "/api/v1/xkcd" });
     maxnum.then((r)=>
@@ -107,7 +107,7 @@ $( document ).ready(()=>
         {
             dom_opreation({ loading:false, data:r.response });
         };
-        $(".decide_number").click(()=>request_comic());
+        document.querySelector(".decide_number").addEventListener("click", ()=>request_comic());
     });
-});
+};
 </script>
