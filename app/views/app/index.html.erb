@@ -1,7 +1,5 @@
 <main id="app">
-    <div>
-        <button class="decide_number actived"> Read comic </button>
-    </div>
+    <button class="decide_number actived"> Read comic </button>
     <article class="panel">
         <h1 class="title"></h1>
         <img class="comic" src="" alt="" />
@@ -81,7 +79,7 @@ window.onload = ()=>
             }
             else
             {
-                btn_text = "Read another comic";
+                btn_text = "Read comic";
                 title_text = data.safe_title;
                 alt_text = data.alt;
                 comic.prop("src" , data.img);
@@ -107,6 +105,9 @@ window.onload = ()=>
         {
             dom_opreation({ loading:false, data:r.response });
         };
+        dom_opreation({ loading:false, data:r.response.body });
+        // console.log(r);
+        request_comic_action(r);
         document.querySelector(".decide_number").addEventListener("click", ()=>request_comic());
     });
 };
