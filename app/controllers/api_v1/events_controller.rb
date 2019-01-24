@@ -8,7 +8,7 @@ class ApiV1::EventsController < ApplicationController
         paramenter = params[:id].to_s + "/"
         response = request_xkcd(paramenter)
         status = response[:code]
-        render :json => { paramenter: paramenter, response: response[:body] }, status: status
+        render :json => { paramenter: params[:id].to_s, response: response[:body] }, status: status
     end
 
     private
