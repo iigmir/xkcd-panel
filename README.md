@@ -1,24 +1,16 @@
-# README
+# xkcd-panel
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A pure API application that can receive JSON data from [https://xkcd.com](https://xkcd.com), with a simple SPA(Single Page Application).
 
-Things you may want to cover:
+## API list
 
-* Ruby version
+* `/api/v1/xkcd`
+    Method: GET
+    Get latest xkcd comic.
+* `/api/v1/xkcd/:number`
+    Method: GET
+    Get specific number of xkcd comic.
 
-* System dependencies
+## Other reference
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* [API manual. Refer "Is there an interface for automated systems to access comics and metadata?" question.](https://xkcd.com/about)
